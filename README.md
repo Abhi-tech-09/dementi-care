@@ -518,10 +518,10 @@ summarise here:
 Dementia UK data is provided for you to use to ground your application with relevant guidance.
 
 Dementia UK's website provides informational web pages and related PDF leaflets. The PDF leaflets are
-available [here](https://storage.cloud.google.com/hackathon_shared_storage/dementia_uk_data/pdfs).
+available [here](https://console.cloud.google.com/storage/browser/hackathon_shared_storage/dementia_uk_data/pdf;tab=objects?project=hackathon-seed-2021).
 
 A spreadsheet of useful additional information is
-available [here](https://storage.cloud.google.com/hackathon_shared_storage/dementia_uk_data/useful_data.xlsx). This
+available [here](https://storage.cloud.google.com/hackathon_shared_storage/dementia_uk_data/useful%20data.xlsx). This
 contains the mapping of PDFs to URLs, google search volumes relating to dementia and information for specific use
 cases.),
 
