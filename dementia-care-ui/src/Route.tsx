@@ -9,6 +9,9 @@ import { useEffect } from "react";
 import { get } from "./firebase/firebase";
 import Role from "./pages/Role";
 import Caretaker from "./pages/Caretaker";
+import OlaMap from "./components/OlaMap";
+import Family from "./pages/Family";
+import Locator from "./pages/Locator";
 
 const router = createBrowserRouter([
   {
@@ -35,6 +38,18 @@ const router = createBrowserRouter([
     path: "/caretaker",
     element: <Caretaker />,
   },
+  {
+    path: "/family",
+    element: <Family />,
+  },
+  {
+    path: "/set-location",
+    element: <OlaMap />,
+  },
+  {
+    path: "/locator", 
+    element: <Locator/>
+  }
 ]);
 const Route = () => {
   const { setUser } = useAuth();

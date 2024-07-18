@@ -10,14 +10,22 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@deck.gl/react": "^9.0.23",
     "@jitsi/react-sdk": "^1.4.0",
+    "@maptiler/geocoding-control": "^1.3.2",
+    "@turf/turf": "^7.0.0",
+    "@vitejs/plugin-basic-ssl": "^1.1.0",
+    "axios": "^1.7.2",
     "clsx": "^2.1.1",
     "firebase": "^10.12.3",
     "framer-motion": "^11.3.4",
+    "maplibre-gl": "^4.5.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-intersection-observer": "^9.13.0",
+    "react-map-gl": "^7.1.7",
     "react-router-dom": "^6.24.1",
+    "styled-components": "^6.1.12",
     "tailwind-merge": "^2.4.0"
   },
   "devDependencies": {

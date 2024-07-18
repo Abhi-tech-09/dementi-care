@@ -1,7 +1,10 @@
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContextProvider";
+import { set } from "../firebase/firebase";
 
 const Role = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const { user, setUser } = useAuth();
   return (
     <div className="lg:flex md:flex flex-row gap-y-px gap-10 justify-center items-center w-screen h-screen">
       <div className="h-fit max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
@@ -18,7 +21,10 @@ const Role = () => {
         </p>
         <a
           className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          onClick={() => navigate("/caretaker")}
+          onClick={() => {
+            navigate("/caretaker");
+            setUser({ ...user, type: "caretaker" });
+          }}
         >
           Sign Up
           <svg
@@ -52,7 +58,10 @@ const Role = () => {
           hand.
         </p>
         <a
-          onClick={() => navigate("/family")}
+          onClick={() => {
+            navigate("/family");
+            setUser({ ...user, type: "family" });
+          }}
           className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         >
           Sign Up
