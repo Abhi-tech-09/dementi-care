@@ -466,8 +466,14 @@ populated for you:
 
 ### Interactive Access
 
-Two OpenShift environments are available for the hackathon event. The primary cluster
-is [here](https://console-openshift-console.apps.dbh.db-hackathon.org).
+Two OpenShift environments are available for the hackathon event. Clusters are available on :
+
+[OpenShift on GCP](https://console-openshift-console.apps.dbh.db-hackathon.org)
+
+[OpenShift on Azure](https://console-openshift-console.apps.hackathon.uksouth.aroapp.io)
+
+Detailed information about accessing the OpenShift environment and how to deploy the Generative AI application on OpenShift is available [here](https://db-hack-guidance-redhat2024.apps.hackathon.uksouth.aroapp.io/db-hack-rh/4.15/index.html).
+
 No SSL cert has been provisioned, so you'll have to risk the warnings.
 On that page, choose to "Log in with" the "githubidp" option and use the GitHub handle you signed up with to complete
 the authentication.
@@ -481,9 +487,6 @@ Use this to authenticate with GCP APIs from your workloads.
 Each token expires after one hour, but the value of the secret is automatically refreshed.
 Your application should tolerate having to refresh the token from the Kubernetes secret.
 When it detects an expired token, simply access the Kubernetes secret again to get a fresh one.
-
-A secondary cluster is available [here](https://console-openshift-console.apps.hackathon.uksouth.aroapp.io) and if it is
-required to use this one too you will be directed to it.
 
 ## Azure
 
