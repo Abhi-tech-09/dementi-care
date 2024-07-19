@@ -1,0 +1,17 @@
+.upload-section {
+  width: 100%;
+}
+
+.file-upload {
+  float: left;
+}
+
+.submit-upload {
+  float: right;
+}
+.submit-upload-button {
+  padding: 5px;
+  width: 100px;
+  font-size: 12px;
+  height: 30px;
+}

@@ -17,6 +17,7 @@ const Navbar = ({ type }: { type: string }) => {
         setUser({
           uid: signedUser.user.uid,
           name: signedUser.user.displayName,
+          email: signedUser.user.email,
         });
         navigate("/role");
         return signedUser;
