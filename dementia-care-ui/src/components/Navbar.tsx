@@ -4,14 +4,12 @@ import { signInWithPopup } from "firebase/auth";
 import { auth, db, provider } from "../firebase/firebase";
 import { doc, setDoc } from "firebase/firestore";
 
-const Navbar = () => {
+const Navbar = ({ type }: { type: string }) => {
   const { user, setUser } = useAuth();
   const navigate = useNavigate();
   const signup = async () => {
     try {
       const signedUser = await signInWithPopup(auth, provider);
-      console.log("signedUser :");
-      console.log(signedUser);
       try {
         await setDoc(doc(db, "users", signedUser.user.uid), {
           name: signedUser.user.displayName,
@@ -21,7 +19,7 @@ const Navbar = () => {
           name: signedUser.user.displayName,
           email: signedUser.user.email,
         });
-        navigate("/");
+        navigate("/role");
         return signedUser;
       } catch (e: any) {
         console.log("Error in entering info in db", e);
@@ -55,9 +53,11 @@ const Navbar = () => {
             tabIndex={0}
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
           >
-            <li>
-              <a>Item 1</a>
-            </li>
+            {user !== null && type === "family" && (
+              <li>
+                <a onClick={() => navigate("/set-location")}>Send Location</a>
+              </li>
+            )}
             <li>
               <a>Parent</a>
               <ul className="p-2">
@@ -78,9 +78,11 @@ const Navbar = () => {
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">
-          <li>
-            <a>Item 1</a>
-          </li>
+          {user !== null && type === "family" && (
+            <li>
+              <a onClick={() => navigate("/set-location")}>Send Location</a>
+            </li>
+          )}
           <li>
             <details>
               <summary>Parent</summary>
@@ -196,7 +198,7 @@ const Navbar = () => {
                       </g>{" "}
                     </g>{" "}
                   </svg>
-                  <span>SignUp with Google</span>
+                  <span>Login with Google</span>
                 </button>
               </li>
             </ul>

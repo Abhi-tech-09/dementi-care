@@ -3,10 +3,14 @@ import HomePage from "./pages/HomePage";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import PostContainer from "./pages/PostContainer";
-import FeedContainer from "./pages/FeedContainer";
 import Stories from "./pages/Stories";
 import { useAuth } from "./contexts/AuthContextProvider";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import Role from "./pages/Role";
+import Caretaker from "./pages/Caretaker";
+import OlaMap from "./components/OlaMap";
+import Family from "./pages/Family";
+import Locator from "./pages/Locator";
 import { useEffect } from "react";
 import { get } from "./firebase/firebase";
 
@@ -14,9 +18,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <HomePage />,
-    // children: {
-    //   // path: "/careta"
-    // }
+  },
+  {
+    path: "/role",
+    element: <Role />,
   },
   {
     path: "/register",
@@ -33,6 +38,22 @@ const router = createBrowserRouter([
   {
     path: "/posts",
     element: <PostContainer />,
+  },
+  {
+    path: "/caretaker",
+    element: <Caretaker />,
+  },
+  {
+    path: "/family",
+    element: <Family />,
+  },
+  {
+    path: "/set-location",
+    element: <OlaMap />,
+  },
+  {
+    path: "/locator",
+    element: <Locator />,
   },
 ]);
 const Route = () => {
