@@ -29,6 +29,20 @@ const Family = () => {
       )
       .then((res: any) => {
         setUserData(res.data);
+        setEmail(res.data.email);
+        setCEmailAddress(res.data.patientDetails.caretakerEmailId);
+        setDoctor(res.data.patientDetails.doctorName);
+        setPatientName(res.data.patientDetails.name);
+        if (res.data.patientDetails.medicines.length > 0) {
+          setMedicineDetails1(res.data.patientDetails.medicines[0]);
+          setMedicineName(res.data.patientDetails.medicines[0].name);
+          setMedicineType(res.data.patientDetails.medicines[0].type);
+          setDays(res.data.patientDetails.medicines[0].days[0]);
+          setTime(res.data.patientDetails.medicines[0].times[0]);
+          setReferredBy(res.data.patientDetails.medicines[0].referedBy);
+          setComment(res.data.patientDetails.medicines[0].comment);
+        }
+        setDisease("Dementia");
       });
   }, [user]);
   function addMedicineDetails() {
@@ -52,39 +66,30 @@ const Family = () => {
   const [referredBy, setReferredBy] = React.useState("");
   const [comment, setComment] = React.useState("");
 
-  const handleSubmit = () => {
-    const payload: any = {
-      email: email,
-      caretakerEmailId: cEmailAddress,
-      name: patientName,
-      medicines: [
-        {
-          id: "",
-          name: medicineName,
-          type: medicineType,
-          days: [days],
-          times: [time],
-          referredBy: referredBy,
-          comment: comment,
-        },
-      ],
-      medicalDetails: disease,
-      doctorName: doctor,
-      safeAreas: [
-        {
-          latitude: 0,
-          longitude: 0,
-        },
-      ],
-    };
-    try {
-      postSubmitData(payload).then((response: any) => {
-        console.log(response);
-      });
-    } catch (error) {
-      console.log(error);
-    } finally {
-    }
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+
+    axios.post(
+      `https://dementia-care-service-vhiugihsdq-ew.a.run.app/userdetails/addPatient?email=${email}&caretakerEmail=${cEmailAddress}`,
+      {
+        caretakerEmailId: cEmailAddress,
+        name: patientName,
+        medicines: [
+          {
+            id: "",
+            name: medicineName,
+            type: medicineType,
+            days: [days],
+            times: [time],
+            referredBy: referredBy,
+            comment: comment,
+          },
+        ],
+        medicalDetails: disease,
+        doctorName: doctor,
+        safeAreas: [],
+      }
+    );
   };
   const handleChange = (event: SelectChangeEvent) => {
     setDays(event.target.value);
@@ -122,81 +127,21 @@ const Family = () => {
   return (
     <>
       <Navbar type="family" />
-      <button
-        onClick={() => navigate("/locator")}
-        className="absolute z-50 bottom-[8rem] right-5 p-4 rounded-full bg-[#d71e1e] font-bold text-white tracking-widest uppercase transform hover:scale-105 hover:bg-[#e04721] transition-colors duration-200"
-      >
-        SOS
-      </button>
+      
       <section className="py-10 bg-slate-950 min-h-screen h-fit">
         <div className="px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl">
-          <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-3xl font-bold leading-tight text-gray-900 sm:text-4xl lg:text-5xl fontColor">
-              Welcome {user !== null && user.name}
-            </h2>
-            {/* <p className="max-w-xl mx-auto mt-4 text-base leading-relaxed text-gray-500 fontColor">Add or View Patient Information</p> */}
-          </div>
-
           <div className="max-w-5xl mx-auto mt-12 sm:mt-16">
-            <div className="grid grid-cols-1 gap-6 px-8 text-center md:px-0 md:grid-cols-1">
-              <div className="overflow-hidden bg-white rounded-xl">
-                <div className="px-8 py-12">
-                  <div className="relative w-24 h-24 mx-auto">
-                    <img
-                      className="relative object-cover w-24 h-24 mx-auto rounded-full"
-                      src="https://cdn.rareblocks.xyz/collection/celebration/images/testimonials/1/avatar-1.jpg"
-                      alt=""
-                    />
-                    <div className="absolute top-0 right-0 flex items-center justify-center bg-blue-600 rounded-full w-7 h-7">
-                      <svg
-                        className="w-4 h-4 text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                      >
-                        <path d="M20.309 17.708C22.196 15.66 22.006 13.03 22 13V5a1 1 0 0 0-1-1h-6c-1.103 0-2 .897-2 2v7a1 1 0 0 0 1 1h3.078a2.89 2.89 0 0 1-.429 1.396c-.508.801-1.465 1.348-2.846 1.624l-.803.16V20h1c2.783 0 4.906-.771 6.309-2.292zm-11.007 0C11.19 15.66 10.999 13.03 10.993 13V5a1 1 0 0 0-1-1h-6c-1.103 0-2 .897-2 2v7a1 1 0 0 0 1 1h3.078a2.89 2.89 0 0 1-.429 1.396c-.508.801-1.465 1.348-2.846 1.624l-.803.16V20h1c2.783 0 4.906-.771 6.309-2.292z"></path>
-                      </svg>
-                    </div>
-                  </div>
-                  <div>
-                    <span className="patientFont">Patient name: </span>{" "}
-                    <span className="patientDataFont">Jenny Wilson</span>
-                  </div>
-                  <div>
-                    <span className="patientFont">Mobile no: </span>{" "}
-                    <span className="patientDataFont">984563120</span>
-                  </div>
-                  <div>
-                    <span className="patientFont">Disease: </span>{" "}
-                    <span className="patientDataFont">
-                      Stage 3 (Alzheimer's disease)
-                    </span>
-                  </div>
-                  <div>
-                    <span className="patientFont">Suggested doctor: </span>{" "}
-                    <span className="patientDataFont">Dr. Mark Wood</span>
-                  </div>
-                  <div>
-                    <span className="patientFont">Caretaker email-id: </span>{" "}
-                    <span className="patientDataFont">kevin.son@gmail.com</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
             <div className="mt-6 overflow-hidden bg-white rounded-xl">
               <div className="px-6 py-12 sm:p-12">
                 <h3 className="text-3xl font-semibold text-center text-gray-900">
                   Add Patient Details
                 </h3>
-                <Accordion>
+                <Accordion defaultExpanded>
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel1-content"
                     id="panel1-header"
-                  >
-                    <Typography>Add Patient Details</Typography>
-                  </AccordionSummary>
+                  ></AccordionSummary>
                   <AccordionDetails>
                     <div>
                       <form onSubmit={handleSubmit}>
@@ -211,6 +156,7 @@ const Family = () => {
                                 type="email"
                                 name=""
                                 id=""
+                                required
                                 onChange={handleEmail}
                                 value={email}
                                 placeholder="Enter your full name"
@@ -228,6 +174,7 @@ const Family = () => {
                               <input
                                 type="text"
                                 name=""
+                                required
                                 id=""
                                 onChange={handlePatientName}
                                 value={patientName}
@@ -244,6 +191,7 @@ const Family = () => {
                             </label>
                             <div className="mt-2.5 relative">
                               <input
+                                required
                                 type="email"
                                 name=""
                                 id=""
@@ -262,12 +210,13 @@ const Family = () => {
                             </label>
                             <div className="mt-2.5 relative">
                               <input
+                                required
                                 type="text"
                                 name=""
                                 id=""
                                 onChange={handleDisease}
                                 value={disease}
-                                placeholder="Enter your full name"
+                                placeholder="Enter disease diagnosed"
                                 className="block w-full px-4 py-4 text-black placeholder-gray-500 transition-all duration-200 bg-white border border-gray-200 rounded-md focus:outline-none focus:border-blue-600 caret-blue-600"
                               />
                             </div>
@@ -280,12 +229,13 @@ const Family = () => {
                             </label>
                             <div className="mt-2.5 relative">
                               <input
+                                required
                                 type="text"
                                 name=""
                                 id=""
                                 onChange={handleDoctor}
                                 value={doctor}
-                                placeholder="Enter your full name"
+                                placeholder="Enter doctor's name"
                                 className="block w-full px-4 py-4 text-black placeholder-gray-500 transition-all duration-200 bg-white border border-gray-200 rounded-md focus:outline-none focus:border-blue-600 caret-blue-600"
                               />
                             </div>
@@ -317,6 +267,7 @@ const Family = () => {
                                       type="text"
                                       name=""
                                       id=""
+                                      required
                                       onChange={handleMedicineName}
                                       value={medicineName}
                                       placeholder="Enter Medicine Name"
@@ -333,6 +284,7 @@ const Family = () => {
                                     <input
                                       type="text"
                                       name=""
+                                      required
                                       id=""
                                       onChange={handleMedicineType}
                                       value={medicineType}
@@ -387,18 +339,18 @@ const Family = () => {
                                       onChange={handleTime}
                                       label="Time"
                                     >
-                                      <MenuItem value={"12.00"}>12.00</MenuItem>
-                                      <MenuItem value={"01.00"}>01.00</MenuItem>
-                                      <MenuItem value={"02.00"}>02.00</MenuItem>
-                                      <MenuItem value={"03.00"}>03.00</MenuItem>
-                                      <MenuItem value={"04.00"}>04.00</MenuItem>
-                                      <MenuItem value={"05.00"}>05.00</MenuItem>
-                                      <MenuItem value={"06.00"}>06.00</MenuItem>
-                                      <MenuItem value={"07.00"}>07.00</MenuItem>
-                                      <MenuItem value={"08.00"}>08.00</MenuItem>
-                                      <MenuItem value={"09.00"}>09.00</MenuItem>
-                                      <MenuItem value={"10.00"}>10.00</MenuItem>
-                                      <MenuItem value={"11.00"}>11.00</MenuItem>
+                                      <MenuItem value={"12:00"}>12:00</MenuItem>
+                                      <MenuItem value={"01:00"}>01:00</MenuItem>
+                                      <MenuItem value={"02:00"}>02:00</MenuItem>
+                                      <MenuItem value={"03:00"}>03:00</MenuItem>
+                                      <MenuItem value={"04:00"}>04:00</MenuItem>
+                                      <MenuItem value={"05:00"}>05:00</MenuItem>
+                                      <MenuItem value={"06:00"}>06:00</MenuItem>
+                                      <MenuItem value={"07:00"}>07:00</MenuItem>
+                                      <MenuItem value={"08:00"}>08:00</MenuItem>
+                                      <MenuItem value={"09:00"}>09:00</MenuItem>
+                                      <MenuItem value={"10:00"}>10:00</MenuItem>
+                                      <MenuItem value={"11:00"}>11:00</MenuItem>
                                     </Select>
                                   </span>
                                 </div>
@@ -443,16 +395,16 @@ const Family = () => {
 
                           <div className="sm:col-span-2">
                             <button
+                              type="submit"
+                              className="inline-flex items-center justify-center w-full px-4 py-4 mt-2 text-base font-semibold text-white transition-all duration-200 bg-blue-600 border border-transparent rounded-md focus:outline-none hover:bg-blue-700 focus:bg-blue-700"
+                            >
+                              Save
+                            </button>
+                            <button
                               onClick={() => navigate("/set-location")}
                               className="inline-flex items-center justify-center w-full px-4 py-4 mt-2 text-base font-semibold text-white transition-all duration-200 bg-blue-600 border border-transparent rounded-md focus:outline-none hover:bg-blue-700 focus:bg-blue-700"
                             >
                               Set safe zone areas
-                            </button>
-                            <button
-                              type="submit"
-                              className="inline-flex items-center justify-center w-full px-4 py-4 mt-2 text-base font-semibold text-white transition-all duration-200 bg-blue-600 border border-transparent rounded-md focus:outline-none hover:bg-blue-700 focus:bg-blue-700"
-                            >
-                              Send
                             </button>
                           </div>
                         </div>
@@ -493,7 +445,7 @@ const Family = () => {
       {mapAlert !== null && (
         <div
           role="alert"
-          className="alert alert-error shadow-lg absolute bottom-5 left-5 w-[600px] z-60"
+          className="alert alert-error shadow-lg sticky bottom-5 left-5 w-[600px] z-60"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
