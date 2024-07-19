@@ -38,7 +38,7 @@ const dataset = [
   },
 ];
 
-const CareTaker = () => {
+const Caretaker = () => {
   const [postData, setPostData] = useState<any>({});
   const { user } = useAuth();
   useEffect(() => {
@@ -277,4 +277,4 @@ const CareTaker = () => {
   );
 };
 
-export default CareTaker;
+export default Caretaker;

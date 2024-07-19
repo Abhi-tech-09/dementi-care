@@ -12,7 +12,7 @@ import Family from "./pages/Family";
 import Locator from "./pages/Locator";
 import { useEffect } from "react";
 import { get } from "./firebase/firebase";
-import CareTaker from "./pages/CareTaker";
+import Caretaker from "./pages/Caretaker";
 
 const router = createBrowserRouter([
   {
@@ -41,7 +41,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/caretaker",
-    element: <CareTaker />,
+    element: <Caretaker />,
   },
   {
     path: "/familymember",
