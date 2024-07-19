@@ -70,7 +70,7 @@ const AlertContextProvider = ({ children }: { children: React.ReactNode }) => {
           }
           setMapAlert(res.data);
         });
-    }, 30 * 1000);
+    }, 10 * 1000);
   }, [user]);
 
   useEffect(() => {
@@ -82,83 +82,8 @@ const AlertContextProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [alert]);
   return (
-    <AlertContext.Provider value={{ alert, setAlert, mapAlert }}>
+    <AlertContext.Provider value={{ alert, setAlert, mapAlert, setMapAlert }}>
       {children}
-      {alert !== null && (
-        <div
-          role="alert"
-          className="alert alert-error shadow-lg absolute bottom-5 left-5 w-[500px] z-60"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            className="stroke-info h-6 w-6 shrink-0"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            ></path>
-          </svg>
-          <div>
-            <h3 className="font-bold">{data && data.type}</h3>
-            <div className="text-xs">{data && data.comment}</div>
-          </div>
-          <button className="btn btn-sm">See</button>
-        </div>
-      )}
-      {mapAlert !== null && (
-        <div
-          role="alert"
-          className="alert alert-error shadow-lg absolute bottom-5 left-5 w-[600px] z-60"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            className="stroke-info h-6 w-6 shrink-0"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            ></path>
-          </svg>
-          <div>
-            <h3 className="font-bold">
-              {mapAlert && "Patient has moved out of safe zone area"}
-            </h3>
-          </div>
-          <button
-            onClick={() => {
-              axios.put(
-                "https://dementia-care-service-vhiugihsdq-ew.a.run.app/safeArea/alerts/acknowledged",
-                {},
-                {
-                  headers: {
-                    email: mapAlert[0].userEmailId,
-                    id: mapAlert[0].id,
-                  },
-                }
-              ).then(() => {setMapAlert(null)});
-            }}
-            className="btn btn-sm"
-          >
-            Acknowledge
-          </button>
-          <button
-            onClick={() => {
-              window.location.replace(window.location.origin + "/locator");
-            }}
-            className="btn btn-sm"
-          >
-            See location
-          </button>
-        </div>
-      )}
     </AlertContext.Provider>
   );
 };

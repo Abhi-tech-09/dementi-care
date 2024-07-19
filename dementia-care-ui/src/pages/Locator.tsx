@@ -8,6 +8,8 @@ import {
 import * as turf from "@turf/turf";
 import { useAuth } from "../contexts/AuthContextProvider";
 import { useAlertContext } from "../contexts/AlertContextProvider";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const options = {
   enableHighAccuracy: true,
@@ -18,10 +20,10 @@ const options = {
 const Locator = () => {
   const [mapReady, setMapReady] = useState(false);
   const [position, setPosition] = useState<any>(null);
-  const { mapAlert } = useAlertContext();
-  console.log(mapAlert);
+  const { setMapAlert, mapAlert } = useAlertContext();
+  const navigate = useNavigate();
 
-  const [map, setMap] = useState<any>();
+  const [map, setMap] = useState<any>(null);
 
   useEffect(() => {
     if (!mapReady) return;
@@ -59,8 +61,7 @@ const Locator = () => {
     });
   }, [mapReady]);
 
-  const patientMarker = new Marker({ color: "#FF0000" })
-      .setLngLat([0, 0]);
+  const patientMarker = new Marker({ color: "#FF0000" }).setLngLat([0, 0]);
 
   useEffect(() => {
     if (mapAlert === null) return;
@@ -121,12 +122,9 @@ const Locator = () => {
           }
         );
 
-        console.log(map.getLayer(`great-circle-${index}`));
-        // if(map.getLayer) then update the same layer (next set of)
-        // else create new layer (first time)
         if (mapAlert.length > 1) {
           const prevTimeStamp = mapAlert.slice(-2)[0].generatedAt;
-          if(map.getLayer(`great-circle-${prevTimeStamp}-${index}`) )
+          if (map.getLayer(`great-circle-${prevTimeStamp}-${index}`))
             map.removeLayer(`great-circle-${prevTimeStamp}-${index}`);
         }
         map.addLayer({
@@ -151,6 +149,60 @@ const Locator = () => {
         ref={() => setMapReady(true)}
         id="central-map"
       />
+      {mapAlert !== null && (
+        <div
+          role="alert"
+          className="alert alert-error shadow-lg absolute bottom-5 left-5 w-[600px] z-60"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            className="stroke-info h-6 w-6 shrink-0"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            ></path>
+          </svg>
+          <div>
+            <h3 className="font-bold">
+              {mapAlert && "Patient has moved out of safe zone area"}
+            </h3>
+          </div>
+          <button
+            onClick={() => {
+              axios
+                .put(
+                  "https://dementia-care-service-vhiugihsdq-ew.a.run.app/safeArea/alerts/acknowledged",
+                  {},
+                  {
+                    headers: {
+                      email: mapAlert[0].userEmailId,
+                      id: mapAlert[0].id,
+                    },
+                  }
+                )
+                .then(() => {
+                  setMapAlert(null);
+                });
+            }}
+            className="btn btn-sm"
+          >
+            Acknowledge
+          </button>
+          <button
+            onClick={() => {
+              navigate("/locator");
+            }}
+            className="btn btn-sm"
+          >
+            See location
+          </button>
+        </div>
+      )}
     </>
   );
 };

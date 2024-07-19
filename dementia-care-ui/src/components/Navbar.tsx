@@ -68,16 +68,7 @@ const Navbar = ({ type }: { type: string }) => {
               </li>
             )}
             <li>
-              <a>Parent</a>
-              <ul className="p-2">
-                <li>{notification()}</li>
-                <li>
-                  <a>Submenu 2</a>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <a>Item 3</a>
+              <a>Feed</a>
             </li>
           </ul>
         </div>
@@ -91,17 +82,7 @@ const Navbar = ({ type }: { type: string }) => {
             </li>
           )}
           <li>
-            <details>
-              <summary>Parent</summary>
-              <ul className="p-2">
-                <li>
-                  <a>Submenu 1</a>
-                </li>
-                <li>
-                  <a>Submenu 2</a>
-                </li>
-              </ul>
-            </details>
+            <a onClick={() => navigate("/posts")}>Feed</a>
           </li>
           <li>{notification()}</li>
         </ul>
