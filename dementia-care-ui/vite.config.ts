@@ -7,15 +7,6 @@ const port: any = process.env.PORT || 5173;
 export default defineConfig({
   plugins: [
     react(),
-    basicSsl({
-      /** name of certification */
-      name: "test",
-      /** custom trust domains */
-      domains: ["*.dementia-care.com", "localhost"],
-      /** custom certification directory */
-      certDir:
-        "/Users/Abhishek%20Sharma/project/kappa-phi-sigma/dementia-care-ui",
-    }),
   ],
   resolve: {
     alias: [{ find: "@", replacement: "/src" }],
@@ -29,6 +20,5 @@ export default defineConfig({
     strictPort: true,
     port: port, // you can replace this port with any port
     https: {},
-    cors: true
   },
 });
