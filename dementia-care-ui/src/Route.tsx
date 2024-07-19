@@ -2,22 +2,26 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import PostContainer from "./pages/PostContainer";
 import Stories from "./pages/Stories";
 import { useAuth } from "./contexts/AuthContextProvider";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { useEffect } from "react";
-import { get } from "./firebase/firebase";
 import Role from "./pages/Role";
 import Caretaker from "./pages/Caretaker";
 import OlaMap from "./components/OlaMap";
 import Family from "./pages/Family";
 import Locator from "./pages/Locator";
-import { useAlertContext } from "./contexts/AlertContextProvider";
+import { useEffect } from "react";
+import { get } from "./firebase/firebase";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <HomePage />,
+  },
+  {
+    path: "/role",
+    element: <Role />,
   },
   {
     path: "/register",
@@ -32,8 +36,8 @@ const router = createBrowserRouter([
     element: <Stories />,
   },
   {
-    path: "/role",
-    element: <Role />,
+    path: "/posts",
+    element: <PostContainer />,
   },
   {
     path: "/caretaker",
@@ -67,12 +71,17 @@ const Route = () => {
               const userFromDB = await get("users", user.uid);
               console.log(userFromDB.data());
               if (userFromDB.exists()) {
-                setUser({ name: userFromDB.data().name, uid: user.uid, email: user.email });
+                setUser({
+                  name: userFromDB.data().name,
+                  uid: user.uid,
+                  email: user.email,
+                });
               }
             } catch (e: any) {
               console.log("Error getting name from db", e);
             }
-          } else setUser({ name: user.displayName, uid: uid, email: user.email });
+          } else
+            setUser({ name: user.displayName, uid: uid, email: user.email });
         } else {
           console.log("User hi nahi hai");
           // User is signed out

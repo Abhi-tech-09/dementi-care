@@ -1,0 +1,11 @@
+.post-like {
+  padding: 5px;
+}
+
+.report-button {
+  float: right;
+}
+.delete-button {
+  float: right;
+  padding-right: 5px;
+}

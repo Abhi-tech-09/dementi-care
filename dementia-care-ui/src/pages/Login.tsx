@@ -23,9 +23,13 @@ const Login = () => {
         const userFromDB = await get("users", user.user.uid);
         console.log(userFromDB.data());
         if (userFromDB.exists()) {
-          setUser({ name: userFromDB.data().name, uid: user.user.uid });
+          setUser({
+            name: userFromDB.data().name,
+            uid: user.user.uid,
+            email: emailRef.current,
+          });
         }
-        navigate("/")
+        navigate("/");
       } catch (e: any) {
         console.log("Error getting name from db", e);
       }

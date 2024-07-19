@@ -24,7 +24,11 @@ const Register = () => {
         const resp = await setDoc(doc(db, "users", createdUser.user.uid), {
           name: nameRef.current,
         });
-        setUser({ uid: createdUser.user.uid, name: nameRef.current });
+        setUser({
+          uid: createdUser.user.uid,
+          name: nameRef.current,
+          email: emailRef.current,
+        });
         navigate("/");
       } catch (e: any) {
         console.log("Error in entering info in db", e);
@@ -44,6 +48,7 @@ const Register = () => {
         setUser({
           uid: signedUser.user.uid,
           name: signedUser.user.displayName,
+          email: signedUser.user.email,
         });
         navigate("/");
       } catch (e: any) {
