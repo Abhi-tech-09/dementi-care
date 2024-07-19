@@ -4,12 +4,14 @@ import { signInWithPopup } from "firebase/auth";
 import { auth, db, provider } from "../firebase/firebase";
 import { doc, setDoc } from "firebase/firestore";
 
-const Navbar = ({ type }: { type: string }) => {
+const Navbar = () => {
   const { user, setUser } = useAuth();
   const navigate = useNavigate();
   const signup = async () => {
     try {
       const signedUser = await signInWithPopup(auth, provider);
+      console.log("signedUser :");
+      console.log(signedUser);
       try {
         await setDoc(doc(db, "users", signedUser.user.uid), {
           name: signedUser.user.displayName,
@@ -17,8 +19,9 @@ const Navbar = ({ type }: { type: string }) => {
         setUser({
           uid: signedUser.user.uid,
           name: signedUser.user.displayName,
+          email: signedUser.user.email,
         });
-        navigate("/role");
+        navigate("/");
         return signedUser;
       } catch (e: any) {
         console.log("Error in entering info in db", e);
@@ -52,11 +55,9 @@ const Navbar = ({ type }: { type: string }) => {
             tabIndex={0}
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
           >
-            {user !== null && type === "family" && (
-              <li>
-                <a onClick={() => navigate("/set-location")}>Send Location</a>
-              </li>
-            )}
+            <li>
+              <a>Item 1</a>
+            </li>
             <li>
               <a>Parent</a>
               <ul className="p-2">
@@ -77,11 +78,9 @@ const Navbar = ({ type }: { type: string }) => {
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">
-          {user !== null && type === "family" && (
-            <li>
-              <a onClick={() => navigate("/set-location")}>Send Location</a>
-            </li>
-          )}
+          <li>
+            <a>Item 1</a>
+          </li>
           <li>
             <details>
               <summary>Parent</summary>
@@ -197,7 +196,7 @@ const Navbar = ({ type }: { type: string }) => {
                       </g>{" "}
                     </g>{" "}
                   </svg>
-                  <span>Login with Google</span>
+                  <span>SignUp with Google</span>
                 </button>
               </li>
             </ul>

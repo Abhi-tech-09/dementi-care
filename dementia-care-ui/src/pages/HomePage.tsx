@@ -43,7 +43,7 @@ const HomePage = () => {
       data-theme="forest"
       className="w-screen h-screen overflow-scroll box-border bg-slate-950"
     >
-      <Navbar type="" />
+      <Navbar />
       <LampContainer>
         <motion.h1
           initial={{ opacity: 0.5, y: 100 }}
