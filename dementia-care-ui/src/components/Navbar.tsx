@@ -64,7 +64,7 @@ const Navbar = ({ type }: { type: string }) => {
           >
             {user !== null && type === "family" && (
               <li>
-                <a onClick={() => navigate("/set-location")}>Send Location</a>
+                <a onClick={() => navigate("/set-location")}>Safe area zone</a>
               </li>
             )}
             <li>
@@ -76,11 +76,6 @@ const Navbar = ({ type }: { type: string }) => {
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">
-          {user !== null && type === "family" && (
-            <li>
-              <a onClick={() => navigate("/set-location")}>Send Location</a>
-            </li>
-          )}
           <li>
             <a onClick={() => navigate("/posts")}>Feed</a>
           </li>

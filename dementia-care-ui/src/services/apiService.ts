@@ -1,5 +1,5 @@
 // src/services/apiService.ts
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import { IPost } from "../types/types";
 
 const API_URL = "https://dementia-care-service-vhiugihsdq-ew.a.run.app/posts";
@@ -17,12 +17,28 @@ const DELETE_POST_URL =
 export const POST_NEW_STORY_URL =
   "https://dementia-care-service-vhiugihsdq-ew.a.run.app/post";
 
+const API_URL_CARE_TAKER =
+  "https://dementia-care-service-vhiugihsdq-ew.a.run.app/userdetails/caretakerdetails?email=harit@db.com";
+
+const API_URL_POST_PATIENT =
+  "https://dementia-care-service-vhiugihsdq-ew.a.run.app/userdetails/addPatient";
+
 export const fetchPosts = async (): Promise<IPost[]> => {
   try {
     const response = await axios.get(API_URL);
     return response.data;
   } catch (error) {
     console.error("Error fetching posts:", error);
+    throw error;
+  }
+};
+
+export const fetchPosts1 = async (payload: AxiosRequestConfig<any> | undefined) => {
+  try {
+    const response = await axios.get(API_URL_CARE_TAKER);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching posts:', error);
     throw error;
   }
 };
@@ -98,6 +114,16 @@ export const uploadPost = async (formData: FormData): Promise<any> => {
     return;
   } catch (error) {
     console.error("Error Uploading post: ", error);
+    throw error;
+  }
+};
+
+export const postSubmitData = async (payload: any) => {
+  try {
+    const response = await axios.post(API_URL_POST_PATIENT);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching posts:", error);
     throw error;
   }
 };

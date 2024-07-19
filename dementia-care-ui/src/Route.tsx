@@ -7,12 +7,12 @@ import Stories from "./pages/Stories";
 import { useAuth } from "./contexts/AuthContextProvider";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Role from "./pages/Role";
-import Caretaker from "./pages/Caretaker";
 import OlaMap from "./components/OlaMap";
 import Family from "./pages/Family";
 import Locator from "./pages/Locator";
 import { useEffect } from "react";
 import { get } from "./firebase/firebase";
+import CareTaker from "./pages/CareTaker";
 
 const router = createBrowserRouter([
   {
@@ -41,10 +41,10 @@ const router = createBrowserRouter([
   },
   {
     path: "/caretaker",
-    element: <Caretaker />,
+    element: <CareTaker />,
   },
   {
-    path: "/family",
+    path: "/familymember",
     element: <Family />,
   },
   {

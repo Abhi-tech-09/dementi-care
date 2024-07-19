@@ -4,6 +4,7 @@ import Post from "../components/atoms/post";
 import { deletePost, fetchPosts, uploadPost } from "../services/apiService";
 import { IPost } from "../types/types";
 import UploadSection from "../components/UploadSection";
+import Navbar from "../components/Navbar";
 
 interface IProps {}
 
@@ -50,6 +51,7 @@ const PostContainer: React.FC<IProps> = (props) => {
       data-theme="forest"
       className="w-screen h-screen overflow-scroll box-border bg-slate-950"
     >
+      <Navbar type="" />
       <div className="m-auto w-[42.5rem] ">
         <div className="mt-6 h-full w-full pb-5 ">
           <div className="mt-4 h-full w-full ">
