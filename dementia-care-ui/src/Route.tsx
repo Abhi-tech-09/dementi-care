@@ -12,6 +12,7 @@ import Caretaker from "./pages/Caretaker";
 import OlaMap from "./components/OlaMap";
 import Family from "./pages/Family";
 import Locator from "./pages/Locator";
+import { useAlertContext } from "./contexts/AlertContextProvider";
 
 const router = createBrowserRouter([
   {
@@ -47,9 +48,9 @@ const router = createBrowserRouter([
     element: <OlaMap />,
   },
   {
-    path: "/locator", 
-    element: <Locator/>
-  }
+    path: "/locator",
+    element: <Locator />,
+  },
 ]);
 const Route = () => {
   const { setUser } = useAuth();
@@ -66,12 +67,12 @@ const Route = () => {
               const userFromDB = await get("users", user.uid);
               console.log(userFromDB.data());
               if (userFromDB.exists()) {
-                setUser({ name: userFromDB.data().name, uid: user.uid });
+                setUser({ name: userFromDB.data().name, uid: user.uid, email: user.email });
               }
             } catch (e: any) {
               console.log("Error getting name from db", e);
             }
-          } else setUser({ name: user.displayName, uid: uid });
+          } else setUser({ name: user.displayName, uid: uid, email: user.email });
         } else {
           console.log("User hi nahi hai");
           // User is signed out
@@ -81,7 +82,11 @@ const Route = () => {
     })();
   }, []);
 
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <RouterProvider router={router} />
+    </>
+  );
 };
 
 export default Route;

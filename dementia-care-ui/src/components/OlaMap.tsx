@@ -5,6 +5,8 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import { Map as MapLibreMap, NavigationControl } from "maplibre-gl";
 
 import "maplibre-gl/dist/maplibre-gl.css";
+import { useAuth } from "../contexts/AuthContextProvider";
+import axios from "axios";
 
 const options = {
   enableHighAccuracy: true,
@@ -15,6 +17,22 @@ const options = {
 const OlaMap = () => {
   const [mapReady, setMapReady] = useState(false);
   const [position, setPosition] = useState<Array<Array<number>>>([]);
+  const { userData, user} = useAuth();
+
+  console.log(user, userData)
+  const addSafeZone = () => {
+    axios.put(
+      `https://dementia-care-service-vhiugihsdq-ew.a.run.app/userdetails/updatePatient?familymMemberEmail=${user.email}`,
+      {
+        ...userData.patientDetails,
+        safeAreas: position.map((pos: any) => ({
+          latitude: pos[1],
+          longitude: pos[0],
+        })),
+      }
+    );
+  };
+
 
   useEffect(() => {
     if (!mapReady) return;
@@ -50,7 +68,6 @@ const OlaMap = () => {
             .setLngLat([pos.coords.longitude, pos.coords.latitude])
             .addTo(map);
           alert("Detected your current location");
-          setPosition(prevPosition => [...prevPosition, [pos.coords.longitude, pos.coords.latitude]])
         },
         () => {},
         options
@@ -62,7 +79,10 @@ const OlaMap = () => {
       new Marker({ color: "#0000FF" })
         .setLngLat([e.lngLat.lng, e.lngLat.lat])
         .addTo(map);
-        setPosition(prevPosition => [...prevPosition, [e.lngLat.lng, e.lngLat.lat]])
+      setPosition((prevPosition) => [
+        ...prevPosition,
+        [e.lngLat.lng, e.lngLat.lat],
+      ]);
     });
   }, [mapReady]);
 
@@ -73,9 +93,15 @@ const OlaMap = () => {
         ref={() => setMapReady(true)}
         id="central-map"
       />
-      <button onClick={() => {
-        alert("Capturing your safe zone locations")
-      }} className='btn btn-primary z-20 absolute top-5 left-20'>Set safe zone locations </button>
+      <button
+        onClick={() => {
+          alert("Capturing your safe zone locations");
+          addSafeZone();
+        }}
+        className="btn btn-primary z-20 absolute top-5 left-20"
+      >
+        Set safe zone locations{" "}
+      </button>
     </>
   );
 };

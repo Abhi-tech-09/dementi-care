@@ -3,11 +3,12 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import Route from "./Route";
 import AuthContextProvider from "./contexts/AuthContextProvider";
+import AlertContextProvider from "./contexts/AlertContextProvider";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <AuthContextProvider>
+  <AuthContextProvider>
+    <AlertContextProvider>
       <Route />
-    </AuthContextProvider>
-  </React.StrictMode>
+    </AlertContextProvider>
+  </AuthContextProvider>
 );

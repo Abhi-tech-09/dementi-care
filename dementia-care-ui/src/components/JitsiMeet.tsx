@@ -1,6 +1,8 @@
 import { JitsiMeeting } from '@jitsi/react-sdk';
+import { useAuth } from '../contexts/AuthContextProvider';
 
 const JitsiMeet = () => {
+  
   return (
     <JitsiMeeting
         roomName="PleaseUseAGoodRoomName"

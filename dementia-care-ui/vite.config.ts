@@ -27,5 +27,6 @@ export default defineConfig({
     strictPort: true,
     port: port, // you can replace this port with any port
     https: {},
+    cors: true
   },
 });

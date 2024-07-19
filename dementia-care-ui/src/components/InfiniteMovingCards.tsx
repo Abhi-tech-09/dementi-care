@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuth } from "../contexts/AuthContextProvider";
 import { cn } from "../utils/utils";
 import React, { useEffect, useState } from "react";
 
@@ -23,7 +24,11 @@ export const InfiniteMovingCards = ({
   const containerRef = React.useRef<HTMLDivElement>(null);
   const scrollerRef = React.useRef<HTMLUListElement>(null);
 
+  const {user} = useAuth();
+  console.log("user");
+  console.log(user);
   useEffect(() => {
+
     addAnimation();
   }, []);
   const [start, setStart] = useState(false);

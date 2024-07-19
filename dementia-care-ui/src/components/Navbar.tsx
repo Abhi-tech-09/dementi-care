@@ -3,6 +3,7 @@ import { useAuth } from "../contexts/AuthContextProvider";
 import { signInWithPopup } from "firebase/auth";
 import { auth, db, provider } from "../firebase/firebase";
 import { doc, setDoc } from "firebase/firestore";
+import notificationIcon from "../assets/notifications.svg";
 
 const Navbar = ({ type }: { type: string }) => {
   const { user, setUser } = useAuth();
@@ -14,12 +15,13 @@ const Navbar = ({ type }: { type: string }) => {
         await setDoc(doc(db, "users", signedUser.user.uid), {
           name: signedUser.user.displayName,
         });
+        console.log(user);
         setUser({
           uid: signedUser.user.uid,
           name: signedUser.user.displayName,
+          email: signedUser.user.email,
         });
         navigate("/role");
-        return signedUser;
       } catch (e: any) {
         console.log("Error in entering info in db", e);
       }
@@ -28,6 +30,14 @@ const Navbar = ({ type }: { type: string }) => {
     }
   };
 
+  const notification = () => {
+    return (
+      <div className="indicator">
+        <span className="indicator-item badge badge-secondary">5+</span>
+        <img width={25} src={notificationIcon} /> Notification
+      </div>
+    );
+  };
   return (
     <div className="glass flex justify-center navbar bg-base-300 lg:w-4/5 md:w-4/5 rounded-lg mx-auto top-2 sticky z-50 text-center">
       <div className="navbar-start">
@@ -60,9 +70,7 @@ const Navbar = ({ type }: { type: string }) => {
             <li>
               <a>Parent</a>
               <ul className="p-2">
-                <li>
-                  <a>Submenu 1</a>
-                </li>
+                <li>{notification()}</li>
                 <li>
                   <a>Submenu 2</a>
                 </li>
@@ -95,9 +103,7 @@ const Navbar = ({ type }: { type: string }) => {
               </ul>
             </details>
           </li>
-          <li>
-            <a>Item 3</a>
-          </li>
+          <li>{notification()}</li>
         </ul>
       </div>
       {user === null ? (

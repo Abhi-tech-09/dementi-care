@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Map as MapLibreMap, Marker, NavigationControl, Popup } from "maplibre-gl";
+import {
+  Map as MapLibreMap,
+  Marker,
+  NavigationControl,
+  Popup,
+} from "maplibre-gl";
 import * as turf from "@turf/turf";
+import { useAuth } from "../contexts/AuthContextProvider";
+import { useAlertContext } from "../contexts/AlertContextProvider";
 
 const options = {
   enableHighAccuracy: true,
@@ -11,15 +18,14 @@ const options = {
 const Locator = () => {
   const [mapReady, setMapReady] = useState(false);
   const [position, setPosition] = useState<any>(null);
+  const { mapAlert } = useAlertContext();
+  console.log(mapAlert);
 
-  const safeZone = {
-    lng: 73.78135740433044,
-    lat: 18.566126359865734,
-  };
+  const [map, setMap] = useState<any>();
 
   useEffect(() => {
     if (!mapReady) return;
-    const map = new MapLibreMap({
+    const map0 = new MapLibreMap({
       container: "central-map",
       center: [0, 0],
       zoom: 0,
@@ -34,89 +40,109 @@ const Locator = () => {
         return { url, resourceType };
       },
     });
+    setMap(map0);
 
     const nav = new NavigationControl({
       visualizePitch: true,
     });
-    map.addControl(nav, "top-left");
-    setTimeout(() => {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          // alert(`Flying to position ${pos.coords.latitude}`)
-          map.flyTo({
-            center: [pos.coords.longitude, pos.coords.latitude],
-            zoom: 12,
-          });
+    map0.addControl(nav, "top-left");
 
-          new Marker({ color: "#FF0000" })
-            .setLngLat([pos.coords.longitude, pos.coords.latitude])
-            .addTo(map);
-          new Marker({ color: "#0000FF" })
-            .setLngLat([safeZone.lng, safeZone.lat])
-            .addTo(map);
-
-          const circle = turf.circle([safeZone.lng, safeZone.lat], 3, {
-            steps: 64,
-            units: "kilometers",
-          });
-
-          map.addLayer({
-            id: "location",
-            type: "fill",
-            source: {
-              type: "geojson",
-              data: circle,
-            },
-            paint: {
-              "fill-color": "#8CFFFF",
-              "fill-opacity": 0.5,
-            },
-          });
-
-          const greatCircle = turf.greatCircle(
-            turf.point([pos.coords.longitude, pos.coords.latitude]),
-            turf.point([safeZone.lng, safeZone.lat]),
-            {
-              properties: { name: "Safe zone location" },
-            }
-          );
-
-          console.log(greatCircle)
-
-          map.addLayer({
-            id: "great-circle",
-            type: "line",
-            source: {
-              type: "geojson",
-              data: greatCircle,
-            },
-            paint: {
-              "line-color": "#000000",
-              "line-width": 3,
-            },
-          });
-        },
-        () => {},
-        options
-      );
-    }, 4000);
-
-    map.on("click", (e) => {
-      console.log("Clicked", e);
-      new Marker({ color: "#0000FF" })
-        .setLngLat([e.lngLat.lng, e.lngLat.lat])
-        .addTo(map);
-    });
+    // alert(`Flying to position ${pos.coords.latitude}`)
 
     const popup = new Popup({
-        closeButton: false, 
-        closeOnClick: false,
-    }); 
-    map.on('mouseenter', 'great-circle', (e) => {
-        map.getCanvas().style.cursor = 'pointer'; 
-        const coordinate = e
-    } )
+      closeButton: false,
+      closeOnClick: false,
+    });
+    map0.on("mouseenter", "great-circle", (e: any) => {
+      map.getCanvas().style.cursor = "pointer";
+      const coordinate = e;
+    });
   }, [mapReady]);
+
+  const patientMarker = new Marker({ color: "#FF0000" })
+      .setLngLat([0, 0]);
+
+  useEffect(() => {
+    if (mapAlert === null) return;
+    if (map === null || !map.isStyleLoaded()) {
+      console.log("Before console", map);
+      return;
+    }
+    console.log("Flying to");
+    map.flyTo({
+      center: [
+        mapAlert.slice(-1)[0].currentLocation.longitude,
+        mapAlert.slice(-1)[0].currentLocation.latitude,
+      ],
+      zoom: 12,
+    });
+
+    patientMarker.remove();
+    patientMarker
+      .setLngLat([
+        mapAlert.slice(-1)[0].currentLocation.longitude,
+        mapAlert.slice(-1)[0].currentLocation.latitude,
+      ])
+      .addTo(map);
+
+    mapAlert
+      .slice(-1)[0]
+      .safeAreas.forEach((area: any, index: number, arr: Array<any>) => {
+        new Marker({ color: "#0000FF" })
+          .setLngLat([area.longitude, area.latitude])
+          .addTo(map);
+
+        const circle = turf.circle([area.longitude, area.latitude], 3, {
+          steps: 64,
+          units: "kilometers",
+        });
+
+        map.addLayer({
+          id: `location-${index}`,
+          type: "fill",
+          source: {
+            type: "geojson",
+            data: circle,
+          },
+          paint: {
+            "fill-color": "#8CFFFF",
+            "fill-opacity": 0.5,
+          },
+        });
+
+        const greatCircle = turf.greatCircle(
+          turf.point([
+            mapAlert.slice(-1)[0].currentLocation.longitude,
+            mapAlert.slice(-1)[0].currentLocation.latitude,
+          ]),
+          turf.point([area.longitude, area.latitude]),
+          {
+            properties: { name: "Safe zone location" },
+          }
+        );
+
+        console.log(map.getLayer(`great-circle-${index}`));
+        // if(map.getLayer) then update the same layer (next set of)
+        // else create new layer (first time)
+        if (mapAlert.length > 1) {
+          const prevTimeStamp = mapAlert.slice(-2)[0].generatedAt;
+          if(map.getLayer(`great-circle-${prevTimeStamp}-${index}`) )
+            map.removeLayer(`great-circle-${prevTimeStamp}-${index}`);
+        }
+        map.addLayer({
+          id: `great-circle-${mapAlert.slice(-1)[0].generatedAt}-${index}`,
+          type: "line",
+          source: {
+            type: "geojson",
+            data: greatCircle,
+          },
+          paint: {
+            "line-color": "#000000",
+            "line-width": 3,
+          },
+        });
+      });
+  }, [mapAlert]);
 
   return (
     <>
@@ -125,14 +151,6 @@ const Locator = () => {
         ref={() => setMapReady(true)}
         id="central-map"
       />
-      <button
-        onClick={() => {
-          alert("Calculating your distance from safezones");
-        }}
-        className="btn btn-primary z-20 absolute top-5 left-20"
-      >
-        Set current location
-      </button>
     </>
   );
 };
